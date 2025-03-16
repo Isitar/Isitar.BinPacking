@@ -14,7 +14,7 @@ public class Draw2DSolution
         foreach (var solvedProduct in solution.SolvedProducts)
         {
             var color = $"rgb({Random.Shared.Next(256)},{Random.Shared.Next(256)},{Random.Shared.Next(256)})";
-            svgContent.AppendLine($"<rect x=\"{solvedProduct.Point.X}\" y=\"{solvedProduct.Point.Y}\" width=\"{solvedProduct.Product.Width}\" height=\"{solvedProduct.Product.Height}\" fill=\"{color}\" stroke=\"black\" stroke-width=\"1\" />");
+            svgContent.AppendLine($"<rect x=\"{solvedProduct.Point.X}\" y=\"{solvedProduct.Point.Y}\" width=\"{ solvedProduct.AdjustedWidth}\" height=\"{solvedProduct.AdjustedHeight}\" fill=\"{color}\" stroke=\"black\" stroke-width=\"1\" />");
         }
 
         svgContent.AppendLine("</svg>");

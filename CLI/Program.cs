@@ -17,28 +17,21 @@ var sameProductFillsOneBox = new Solver.Scenario(
 
 // var solver = new OneDSolver();
 // var result = solver.Solve(OneDScenarios.Big);
+if (true)
+{
+    var twoDSolver = new TwoDSolver();
+    // var result = twoDSolver.Solve(TwoDScenarios.RandomScenario(80));
+    var result = twoDSolver.Solve(TwoDScenarios.FillOnlyWithRot());
+    Draw2DSolution.Draw(result);
+}
 
-var solver = new TwoDSolver();
-var result = solver.Solve(TwoDScenarios.FillOnlyWithRot());
-// new TwoDSolver.Scenario([
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(20, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 45),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(30, 30),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(10, 10),
-//     new TwoDSolver.Product(15, 10),
-//     new TwoDSolver.Product(15, 46),
-//     new TwoDSolver.Product(10, 10),
-// ], new TwoDSolver.Space(100, 100)));
+if (true)
+{
+    var solver = new ThreeDSolver();
+    var result = solver.Solve(ThreeDScenarios.OnlyWithRot);
 
-Draw2DSolution.Draw(result);
+    Draw3DSolution.Draw(result);
+}
+
 
 // Console.WriteLine($"Result: {result}");
