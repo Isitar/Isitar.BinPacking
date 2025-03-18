@@ -17,7 +17,7 @@ var sameProductFillsOneBox = new Solver.Scenario(
 
 // var solver = new OneDSolver();
 // var result = solver.Solve(OneDScenarios.Big);
-if (true)
+if (false)
 {
     var twoDSolver = new TwoDSolver();
     // var result = twoDSolver.Solve(TwoDScenarios.RandomScenario(80));
@@ -25,12 +25,19 @@ if (true)
     Draw2DSolution.Draw(result);
 }
 
-if (true)
+if (false)
 {
     var solver = new ThreeDSolver();
-    var result = solver.Solve(ThreeDScenarios.OnlyWithRot);
+    var result = solver.Solve(ThreeDScenarios.Randoms(15));
 
     Draw3DSolution.Draw(result);
+}
+
+if (true)
+{
+    var solver = new ThreeDSolverMultiBins();
+    var result = solver.Solve(ThreeDSolverMultiBinsScenarios.Randoms(10,2));
+    Draw3DMultiBinSolution.Draw(result);
 }
 
 
