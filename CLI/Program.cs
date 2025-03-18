@@ -36,7 +36,7 @@ if (false)
 if (true)
 {
     var solver = new ThreeDSolverMultiBins();
-    var result = solver.Solve(ThreeDSolverMultiBinsScenarios.Randoms(10,2));
+    var result = solver.Solve(ThreeDSolverMultiBinsScenarios.Randoms(15,4));
     Draw3DMultiBinSolution.Draw(result);
 }
 

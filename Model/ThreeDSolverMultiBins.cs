@@ -6,7 +6,7 @@ public class ThreeDSolverMultiBins
 {
     public record Product(int Width, int Height, int Depth);
 
-    public record BinType(int Width, int Height, int Depth);
+    public record BinType(int Width, int Height, int Depth, int Cost);
 
     public record Scenario(IReadOnlyList<Product> Products, IReadOnlyList<BinType> BinTypes);
 
@@ -56,6 +56,7 @@ public class ThreeDSolverMultiBins
 
         var env = new GRBEnv(true);
         env.Start();
+        env.TimeLimit = 120;
         var model = new GRBModel(env);
 
         var productPositionsX = model.AddVars(products.Count, GRB.CONTINUOUS);
@@ -171,18 +172,18 @@ public class ThreeDSolverMultiBins
             {
                 for (var binType = 0; binType < binTypes.Count; binType++)
                 {
-                    var binIsUsedAndType = model.AddVar(0, 1, 0, GRB.BINARY, $"bin_{b}_is_used_{binType}");
-                    model.AddGenConstrAnd(binIsUsedAndType,
+                    var binIsUsedByProductAndType = model.AddVar(0, 1, 0, GRB.BINARY, $"bin_{b}_is_used_{binType}");
+                    model.AddGenConstrAnd(binIsUsedByProductAndType,
                         [binXIsUsed[b], binXIsBinTypeY[b, binType], productXInBinY[p, b]],
                         "bin_is_used_and_type_and_contains_product");
 
-                    model.AddGenConstrIndicator(binIsUsedAndType, 1,
+                    model.AddGenConstrIndicator(binIsUsedByProductAndType, 1,
                         productPositionsX[p] + width <= binTypes[binType].Width,
                         $"product_{p}_within_x_space");
-                    model.AddGenConstrIndicator(binIsUsedAndType, 1,
+                    model.AddGenConstrIndicator(binIsUsedByProductAndType, 1,
                         productPositionsY[p] + depth <= binTypes[binType].Depth,
                         $"product_{p}_within_y_space");
-                    model.AddGenConstrIndicator(binIsUsedAndType, 1, productPositionsZ[p] + height <= binTypes[binType].Height,
+                    model.AddGenConstrIndicator(binIsUsedByProductAndType, 1, productPositionsZ[p] + height <= binTypes[binType].Height,
                         $"product_{p}_within_z_space");
                 }
             }
@@ -192,18 +193,18 @@ public class ThreeDSolverMultiBins
             {
                 if (p >= p2) continue;
 
+                model.AddGenConstrIndicator(productXIsLeftOfY[p, p2], 1,
+                    productPositionsX[p] + width <= productPositionsX[p2], $"product_{p}_left_of_{p2}");
+
+
+                model.AddGenConstrIndicator(productXIsBehindOfY[p, p2], 1,
+                    productPositionsY[p] + depth <= productPositionsY[p2], $"product_{p}_behind_of_{p2}");
+
+                model.AddGenConstrIndicator(productXIsBelowOfY[p, p2], 1,
+                    productPositionsZ[p] + height <= productPositionsZ[p2], $"product_{p}_below_of_{p2}");
+                
                 for (var b = 0; b < numBins; b++)
                 {
-                    model.AddGenConstrIndicator(productXIsLeftOfY[p, p2], 1,
-                        productPositionsX[p] + width <= productPositionsX[p2], $"product_{p}_left_of_{p2}");
-
-
-                    model.AddGenConstrIndicator(productXIsBehindOfY[p, p2], 1,
-                        productPositionsY[p] + depth <= productPositionsY[p2], $"product_{p}_behind_of_{p2}");
-
-                    model.AddGenConstrIndicator(productXIsBelowOfY[p, p2], 1,
-                        productPositionsZ[p] + height <= productPositionsZ[p2], $"product_{p}_below_of_{p2}");
-
                     var productsAreInSameBin =
                         model.AddVar(0, 1, 0, GRB.BINARY, $"product_{p}_and_{p2}_are_in_bin_{b}");
                     model.AddGenConstrAnd(productsAreInSameBin, [productXInBinY[p, b], productXInBinY[p2, b]],
@@ -217,13 +218,16 @@ public class ThreeDSolverMultiBins
         }
 
         // minimize bins used
-        var sumBinUsed = new GRBLinExpr();
+        var sumBinCost = new GRBLinExpr();
         for (var b = 0; b < numBins; b++)
         {
-            sumBinUsed += binXIsUsed[b];
+            for (var bt = 0; bt < binTypes.Count; bt++)
+            {
+                sumBinCost += (binXIsUsed[b] + binXIsBinTypeY[b,bt]) * binTypes[bt].Cost;    
+            }
         }
 
-        model.SetObjective(sumBinUsed, GRB.MINIMIZE);
+        model.SetObjective(sumBinCost, GRB.MINIMIZE);
 
         model.Optimize();
 
