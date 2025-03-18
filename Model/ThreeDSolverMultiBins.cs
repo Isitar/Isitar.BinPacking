@@ -8,7 +8,7 @@ public class ThreeDSolverMultiBins
 
     public record BinType(int Width, int Height, int Depth, int Cost);
 
-    public record Scenario(IReadOnlyList<Product> Products, IReadOnlyList<BinType> BinTypes);
+    public record Scenario(IReadOnlyList<Product> Products, IReadOnlyList<BinType> BinTypes, string? Name = null);
 
     public record Point(double X, double Y, double Z);
 
@@ -52,7 +52,7 @@ public class ThreeDSolverMultiBins
 
     public Solution Solve(Scenario scenario)
     {
-        var (products, binTypes) = scenario;
+        var (products, binTypes, _) = scenario;
 
         var env = new GRBEnv(true);
         env.Start();
@@ -223,7 +223,9 @@ public class ThreeDSolverMultiBins
         {
             for (var bt = 0; bt < binTypes.Count; bt++)
             {
-                sumBinCost += (binXIsUsed[b] + binXIsBinTypeY[b,bt]) * binTypes[bt].Cost;    
+                var binIsUsedAndIsType = model.AddVar(0,1,0, GRB.BINARY, $"bin_{b}_used_{bt}");
+                model.AddGenConstrAnd(binIsUsedAndIsType, [binXIsUsed[b], binXIsBinTypeY[b, bt]], $"bin_{b}_used_{bt}");
+                sumBinCost += binIsUsedAndIsType * binTypes[bt].Cost;    
             }
         }
 

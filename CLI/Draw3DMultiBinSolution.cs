@@ -5,7 +5,7 @@ namespace CLI;
 
 public class Draw3DMultiBinSolution
 {
-    public static void Draw(ThreeDSolverMultiBins.Solution solution, string fileName = "solution.obj")
+    public static void Draw(ThreeDSolverMultiBins.Solution solution, string fileName = "solution.obj" , double factor = 1)
     {
         var objContent = new StringBuilder();
 
@@ -15,14 +15,14 @@ public class Draw3DMultiBinSolution
         var binIndex = 0;
         foreach (var usedBin in solution.UsedBins)
         {
-            vertexCount = AddCube(objContent, offset, 0, 0, usedBin.BinType.Width, usedBin.BinType.Height, usedBin.BinType.Depth,
+            vertexCount = AddCube(objContent, offset * factor, 0, 0, usedBin.BinType.Width * factor, usedBin.BinType.Height * factor, usedBin.BinType.Depth * factor,
                 vertexCount, $"bin_{binIndex}");
 
             var i = 0;
             foreach (var solvedProduct in usedBin.SolvedProducts)
             {
-                vertexCount = AddCube(objContent, solvedProduct.Point.X + offset, solvedProduct.Point.Y, solvedProduct.Point.Z,
-                    solvedProduct.AdjustedWidth, solvedProduct.AdjustedHeight, solvedProduct.AdjustedDepth,
+                vertexCount = AddCube(objContent, (solvedProduct.Point.X + offset) * factor, solvedProduct.Point.Y * factor, solvedProduct.Point.Z * factor,
+                    solvedProduct.AdjustedWidth * factor, solvedProduct.AdjustedHeight * factor, solvedProduct.AdjustedDepth * factor,
                     vertexCount, $"b_{binIndex}_p_{i++}");
             }
 
