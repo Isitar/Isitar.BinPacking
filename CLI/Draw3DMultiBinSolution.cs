@@ -5,7 +5,8 @@ namespace CLI;
 
 public class Draw3DMultiBinSolution
 {
-    public static void Draw(ThreeDSolverMultiBins.Solution solution, string fileName = "solution.obj" , double factor = 1)
+    public static void Draw(ThreeDSolverMultiBins.Solution solution, string fileName = "solution.obj",
+        double factor = 1)
     {
         var objContent = new StringBuilder();
 
@@ -15,22 +16,23 @@ public class Draw3DMultiBinSolution
         var binIndex = 0;
         foreach (var usedBin in solution.UsedBins)
         {
-            vertexCount = AddCube(objContent, offset * factor, 0, 0, usedBin.BinType.Width * factor, usedBin.BinType.Height * factor, usedBin.BinType.Depth * factor,
+            vertexCount = AddCube(objContent, offset * factor, 0, 0, usedBin.BinType.Width * factor,
+                usedBin.BinType.Height * factor, usedBin.BinType.Depth * factor,
                 vertexCount, $"bin_{binIndex}");
 
             var i = 0;
             foreach (var solvedProduct in usedBin.SolvedProducts)
             {
-                vertexCount = AddCube(objContent, (solvedProduct.Point.X + offset) * factor, solvedProduct.Point.Y * factor, solvedProduct.Point.Z * factor,
-                    solvedProduct.AdjustedWidth * factor, solvedProduct.AdjustedHeight * factor, solvedProduct.AdjustedDepth * factor,
+                vertexCount = AddCube(objContent, (solvedProduct.Point.X + offset) * factor,
+                    solvedProduct.Point.Y * factor, solvedProduct.Point.Z * factor,
+                    solvedProduct.AdjustedWidth * factor, solvedProduct.AdjustedHeight * factor,
+                    solvedProduct.AdjustedDepth * factor,
                     vertexCount, $"b_{binIndex}_p_{i++}");
             }
 
             binIndex++;
             offset += usedBin.BinType.Width + 10;
         }
-        
-
 
 
         // Write the OBJ content to a file
@@ -40,7 +42,8 @@ public class Draw3DMultiBinSolution
         Console.WriteLine($"3D file {fileName} created");
     }
 
-    private static int AddCube(StringBuilder objContent, double x, double y, double z, double width, double height, double depth,
+    private static int AddCube(StringBuilder objContent, double x, double y, double z, double width, double height,
+        double depth,
         int lastVertexCount, string name)
     {
         objContent.AppendLine($"o {name}");

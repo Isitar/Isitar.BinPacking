@@ -183,7 +183,8 @@ public class ThreeDSolverMultiBins
                     model.AddGenConstrIndicator(binIsUsedByProductAndType, 1,
                         productPositionsY[p] + depth <= binTypes[binType].Depth,
                         $"product_{p}_within_y_space");
-                    model.AddGenConstrIndicator(binIsUsedByProductAndType, 1, productPositionsZ[p] + height <= binTypes[binType].Height,
+                    model.AddGenConstrIndicator(binIsUsedByProductAndType, 1,
+                        productPositionsZ[p] + height <= binTypes[binType].Height,
                         $"product_{p}_within_z_space");
                 }
             }
@@ -202,7 +203,7 @@ public class ThreeDSolverMultiBins
 
                 model.AddGenConstrIndicator(productXIsBelowOfY[p, p2], 1,
                     productPositionsZ[p] + height <= productPositionsZ[p2], $"product_{p}_below_of_{p2}");
-                
+
                 for (var b = 0; b < numBins; b++)
                 {
                     var productsAreInSameBin =
@@ -223,9 +224,9 @@ public class ThreeDSolverMultiBins
         {
             for (var bt = 0; bt < binTypes.Count; bt++)
             {
-                var binIsUsedAndIsType = model.AddVar(0,1,0, GRB.BINARY, $"bin_{b}_used_{bt}");
+                var binIsUsedAndIsType = model.AddVar(0, 1, 0, GRB.BINARY, $"bin_{b}_used_{bt}");
                 model.AddGenConstrAnd(binIsUsedAndIsType, [binXIsUsed[b], binXIsBinTypeY[b, bt]], $"bin_{b}_used_{bt}");
-                sumBinCost += binIsUsedAndIsType * binTypes[bt].Cost;    
+                sumBinCost += binIsUsedAndIsType * binTypes[bt].Cost;
             }
         }
 

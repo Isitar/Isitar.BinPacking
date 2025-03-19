@@ -17,15 +17,15 @@ public class TwoDScenarios
                 .Select(_ => new Product(10, 10))
                 .ToList(),
             new Space(100, 100));
-    
+
     public static Scenario TenXTwentyFill() =>
         new(
             Enumerable.Range(0, 50)
                 .Select(_ => new Product(10, 20))
                 .ToList(),
             new Space(100, 100));
-    
-    
+
+
     public static Scenario FillOnlyWithRot() =>
         new(
             [

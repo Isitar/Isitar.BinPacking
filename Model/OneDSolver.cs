@@ -24,11 +24,12 @@ public class OneDSolver
             {
                 if (p1 < p2)
                 {
-
                     model.AddGenConstrIndicator(productOrder[p1], 1,
-                        productPositions[p2] >= productPositions[p1] + scenario.Products[p1].Width, $"p{p1}_before_{p2}");
+                        productPositions[p2] >= productPositions[p1] + scenario.Products[p1].Width,
+                        $"p{p1}_before_{p2}");
                     model.AddGenConstrIndicator(productOrder[p1], 0,
-                        productPositions[p1] >= productPositions[p2] + scenario.Products[p2].Width, $"p{p2}_before_{p1}");
+                        productPositions[p1] >= productPositions[p2] + scenario.Products[p2].Width,
+                        $"p{p2}_before_{p1}");
                 }
             }
         }
@@ -45,7 +46,8 @@ public class OneDSolver
 
         for (var p = 0; p < scenario.Products.Count; p++)
         {
-            Console.WriteLine($"Product {p} at ({productPositions[p].X}, {productPositions[p].X + scenario.Products[p].Width})");
+            Console.WriteLine(
+                $"Product {p} at ({productPositions[p].X}, {productPositions[p].X + scenario.Products[p].Width})");
         }
 
         for (var p1 = 0; p1 < scenario.Products.Count; p1++)

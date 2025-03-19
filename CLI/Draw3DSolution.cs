@@ -34,7 +34,8 @@ public class Draw3DSolution
         Console.WriteLine($"3D file {fileName} created");
     }
 
-    private static int AddCube(StringBuilder objContent, double x, double y, double z, double width, double height, double depth,
+    private static int AddCube(StringBuilder objContent, double x, double y, double z, double width, double height,
+        double depth,
         int lastVertexCount, string name)
     {
         objContent.AppendLine($"o {name}");

@@ -1,24 +1,15 @@
 ﻿using CLI;
+using CromulentBisgetti.ContainerPacking;
 using CromulentBisgetti.ContainerPacking.Algorithms;
 using CromulentBisgetti.ContainerPacking.Entities;
 using Model;
 
-var oneProduct = new Solver.Scenario(
-    [new Solver.Product(Width: 1, Height: 1, Depth: 1)],
-    [new Solver.Box(Width: 1, Height: 1, Depth: 1, Price: 1)]);
+if (false)
+{
+    var solver = new OneDSolver();
+    var result = solver.Solve(OneDScenarios.Big);
+}
 
-var sameProductFillsOneBox = new Solver.Scenario(
-    Products:
-    [
-        new Solver.Product(Width: 1, Height: 1, Depth: 1),
-        new Solver.Product(Width: 1, Height: 1, Depth: 1),
-        new Solver.Product(Width: 1, Height: 1, Depth: 1)
-    ],
-    BoxTypes: [new Solver.Box(Width: 1, Height: 1, Depth: 1, Price: 1)]);
-
-
-// var solver = new OneDSolver();
-// var result = solver.Solve(OneDScenarios.Big);
 if (false)
 {
     var twoDSolver = new TwoDSolver();
@@ -38,7 +29,7 @@ if (false)
 if (false)
 {
     var solver = new ThreeDSolverMultiBins();
-    var result = solver.Solve(ThreeDSolverMultiBinsScenarios.Randoms(15,4));
+    var result = solver.Solve(ThreeDSolverMultiBinsScenarios.Randoms(15, 4));
     Draw3DMultiBinSolution.Draw(result);
 }
 
@@ -69,7 +60,7 @@ if (true)
 
         var split = line.Split(";");
         var parcelId = long.Parse(split[0]);
-        
+
         var productId = split[1];
         var width = converToInt(split[2]);
         var height = converToInt(split[3]);
@@ -79,15 +70,16 @@ if (true)
         {
             productsByParcel[parcelId] = new List<ThreeDSolverMultiBins.Product>();
         }
+
         productsByParcel[parcelId].Add(new ThreeDSolverMultiBins.Product(width, height, length));
-        
     }
-    
-    var scenarios = productsByParcel.Select(kvp => new ThreeDSolverMultiBins.Scenario(kvp.Value, binTypes, kvp.Key.ToString())).ToList();
-    
+
+    var scenarios = productsByParcel
+        .Select(kvp => new ThreeDSolverMultiBins.Scenario(kvp.Value, binTypes, kvp.Key.ToString())).ToList();
+
     Console.WriteLine($"Found {scenarios.Count} scenarios");
     var solver = new ThreeDSolverMultiBins();
-    
+
     foreach (var scenario in scenarios)
     {
         try
@@ -100,7 +92,7 @@ if (true)
             Console.WriteLine($"Solving scenario with {scenario.Products.Count} products");
             var ilpSolution = solver.Solve(scenario);
             Draw3DMultiBinSolution.Draw(ilpSolution, $"{scenario.Name}.obj", 0.01);
-            var chapmanSol = CromulentBisgetti.ContainerPacking.PackingService.Pack(
+            var chapmanSol = PackingService.Pack(
                 scenario.BinTypes.Select((bt, i) => new Container(i, bt.Width, bt.Depth, bt.Height)).ToList(),
                 scenario.Products.Select((p, i) => new Item(i, p.Width, p.Depth, p.Height, 1)).ToList(),
                 [(int)AlgorithmType.EB_AFIT]
@@ -122,10 +114,4 @@ if (true)
             Console.WriteLine(ex.Message);
         }
     }
-
-
 }
-
-
-
-// Console.WriteLine($"Result: {result}");

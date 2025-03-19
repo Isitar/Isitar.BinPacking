@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Model\Model.csproj" />
+        <ProjectReference Include="..\Model\Model.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="3DContainerPacking" Version="1.0.2" />
+        <PackageReference Include="3DContainerPacking" Version="1.0.2" />
     </ItemGroup>
 
 </Project>

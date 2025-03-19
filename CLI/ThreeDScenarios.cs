@@ -48,7 +48,8 @@ public class ThreeDScenarios
 
     public static Scenario Randoms(int num) => new Scenario(
         Enumerable.Range(0, num)
-            .Select(_ => new Product(Random.Shared.Next(20, 50), Random.Shared.Next(20, 50), Random.Shared.Next(20, 50)))
+            .Select(_ =>
+                new Product(Random.Shared.Next(20, 50), Random.Shared.Next(20, 50), Random.Shared.Next(20, 50)))
             .ToList(),
         new Space(100, 100, 100)
     );

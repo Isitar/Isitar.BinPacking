@@ -31,8 +31,8 @@ public class TwoDSolver
         var productPositionsX = model.AddVars(products.Count, GRB.CONTINUOUS);
         var productPositionsY = model.AddVars(products.Count, GRB.CONTINUOUS);
         var rotation = model.AddVars(products.Count, GRB.BINARY);
-        
-        
+
+
         var productXIsLeftOfY = new GRBVar[products.Count, products.Count];
         var productXIsBelowOfY = new GRBVar[products.Count, products.Count];
         for (var p = 0; p < products.Count; p++)
@@ -48,7 +48,7 @@ public class TwoDSolver
         {
             var width = products[p].Width * (1 - rotation[p]) + rotation[p] * products[p].Height;
             var height = products[p].Height * (1 - rotation[p]) + rotation[p] * products[p].Width;
-            
+
             model.AddConstr(productPositionsX[p] + width <= space.Width, $"product_{p}_within_x_space");
             model.AddConstr(productPositionsY[p] + height <= space.Height, $"product_{p}_within_y_space");
 
@@ -77,7 +77,8 @@ public class TwoDSolver
         }
 
         return new Solution(products
-            .Select((p, i) => new SolvedProduct(p, new Point(productPositionsX[i].X, productPositionsY[i].X), rotation[i].X > 0.5))
+            .Select((p, i) =>
+                new SolvedProduct(p, new Point(productPositionsX[i].X, productPositionsY[i].X), rotation[i].X > 0.5))
             .ToList(), space);
     }
 }
