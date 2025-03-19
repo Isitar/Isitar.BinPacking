@@ -54,10 +54,10 @@ public class ThreeDSolverMultiBins
     {
         var (products, binTypes, _) = scenario;
 
-        var env = new GRBEnv(true);
+        using var env = new GRBEnv(true);
         env.Start();
         env.TimeLimit = 120;
-        var model = new GRBModel(env);
+        using var model = new GRBModel(env);
 
         var productPositionsX = model.AddVars(products.Count, GRB.CONTINUOUS);
         var productPositionsY = model.AddVars(products.Count, GRB.CONTINUOUS);

@@ -91,7 +91,7 @@ if (true)
 
             Console.WriteLine($"Solving scenario with {scenario.Products.Count} products");
             var ilpSolution = solver.Solve(scenario);
-            Draw3DMultiBinSolution.Draw(ilpSolution, $"{scenario.Name}.obj", 0.01);
+            
             var chapmanSol = PackingService.Pack(
                 scenario.BinTypes.Select((bt, i) => new Container(i, bt.Width, bt.Depth, bt.Height)).ToList(),
                 scenario.Products.Select((p, i) => new Item(i, p.Width, p.Depth, p.Height, 1)).ToList(),
@@ -106,6 +106,11 @@ if (true)
 
             var ilpCost = ilpSolution.UsedBins.Sum(b => b.BinType.Cost);
             var dgCost = usedSolutionInDgBinType?.Cost ?? 0;
+            var delta = dgCost - ilpCost;
+            if (delta != 0)
+            {
+                Draw3DMultiBinSolution.Draw(ilpSolution, $"{scenario.Name}.obj", 0.01);
+            }
 
             File.AppendAllLines("comparison.csv", [$"{scenario.Name};{ilpCost};{dgCost};{dgCost - ilpCost}"]);
         }
